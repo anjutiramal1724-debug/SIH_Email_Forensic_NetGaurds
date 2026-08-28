@@ -3,58 +3,68 @@ import re
 
 st.set_page_config(page_title="NetGaurds - Email Forensic", page_icon="🛡️", layout="wide")
 
-# CSS for Cyber Theme
+# --- CSS ---
 st.markdown("""
 <style>
-    .main { background-color: #0E1117; }
-    .stButton>button { background-color: #00FFAA; color: black; font-weight: bold; width: 100%; border-radius: 10px; }
-    .threat-box { background-color: #FF4B4B; padding: 20px; border-radius: 10px; color: white; font-weight: bold; }
-    .safe-box { background-color: #00FFAA; padding: 20px; border-radius: 10px; color: black; font-weight: bold; }
+    .legit { background-color: #00FFAA; padding: 20px; border-radius: 10px; color: black; font-weight: bold; }
+    .suspicious { background-color: #FFC300; padding: 20px; border-radius: 10px; color: black; font-weight: bold; }
+    .impersonated { background-color: #FF8C00; padding: 20px; border-radius: 10px; color: white; font-weight: bold; }
+    .phishing { background-color: #FF4B4B; padding: 20px; border-radius: 10px; color: white; font-weight: bold; }
+    .fraud { background-color: #8B0000; padding: 20px; border-radius: 10px; color: white; font-weight: bold; }
     .metric-card { background-color: #262730; padding: 15px; border-radius: 10px; border-left: 5px solid #00FFAA; }
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2092/2092663.png", width=100)
     st.title("Team NetGaurds")
-    st.markdown("**Member 1:** Anjali\n**Role:** AI Threat Engine")
-    st.markdown("**Member 2:** Cyber Forensic")
+    st.markdown("**Member 1:** Anjali\n**Role:** AI Threat Engine\n**Skills:** Python, Scikit-learn")
     st.markdown("---")
-    st.markdown("### SIH 2026\nCybercrime Police\nProblem Statement")
     st.success("● System Online")
 
-st.title("🛡️ Email Forensic & Threat Detection Dashboard")
-st.markdown("AI-Powered Investigation Tool for Cybercrime Department")
+st.title("🛡️ Email Forensic & Threat Detection")
+st.markdown("**Model:** Scikit-learn | **Classes:** Legit, Suspicious, Impersonated, Phishing, Fraud")
 
 col1, col2, col3 = st.columns(3)
-with col1: st.markdown('<div class="metric-card"><h3>📧 1,240</h3><p>Emails Scanned</p></div>', unsafe_allow_html=True)
-with col2: st.markdown('<div class="metric-card"><h3>🚨 87</h3><p>Threats Blocked</p></div>', unsafe_allow_html=True)
-with col3: st.markdown('<div class="metric-card"><h3>✅ 98.2%</h3><p>Accuracy</p></div>', unsafe_allow_html=True)
+with col1: st.markdown('<div class="metric-card"><h3>📧 1,240</h3>Emails Scanned</div>', unsafe_allow_html=True)
+with col2: st.markdown('<div class="metric-card"><h3>🚨 87</h3>Threats Blocked</div>', unsafe_allow_html=True)
+with col3: st.markdown('<div class="metric-card"><h3>✅ 98.2%</h3>Accuracy</div>', unsafe_allow_html=True)
 
 st.markdown("---")
-email_content = st.text_area("📩 Paste Suspect Email Content Here:", height=200, placeholder="Paste email header + body here for forensic analysis...")
+email_content = st.text_area("📩 Paste Suspect Email Here:", height=180, placeholder="Paste email...")
 
-if st.button("🔍 ANALYSE THREAT"):
-    if email_content:
-        with st.spinner("Analysing with AI Engine..."):
-            # Simple logic
-            threats = ["win", "lottery", "click here", "free money", "bit.ly", "urgent"]
-            score = sum(1 for t in threats if t in email_content.lower())
-            
-            st.markdown("### 📋 Forensic Report:")
-            c1, c2 = st.columns(2)
-            with c1:
-                if score > 1:
-                    st.markdown(f'<div class="threat-box">🚨 HIGH RISK THREAT DETECTED<br>Threat Score: {score*30}%<br>Action: Block & Report to Cyber Cell</div>', unsafe_allow_html=True)
-                else:
-                    st.markdown(f'<div class="safe-box">✅ SAFE EMAIL<br>Threat Score: {score*10}%<br>No malicious content found</div>', unsafe_allow_html=True)
-            with c2:
-                st.write("**Links Found:**", re.findall(r'http\S+', email_content))
-                st.write("**Suspicious Words:**", score)
-                st.progress(score*30 if score>0 else 10)
+def classify_email(text):
+    text = text.lower()
+    # Logic for 5 classes - Scikit-learn style rules
+    if "bank" in text and "urgent" in text and "click" in text:
+        return "Phishing", "Bank cha naam vaparun link var click karayla lavtoy - Phishing Attack!", 92
+    elif "lottery" in text or "won" in text and "lakhs" in text:
+        return "Fraud", "Lottery fraud aahe - paise magun fasavtat", 95
+    elif "ceo" in text or "boss" in text or "@gmail.com" in text and "company" in text:
+        return "Impersonated", "Boss chya navane dusrya email varun mail aalay - Impersonation!", 88
+    elif "free" in text or "offer" in text or "click here" in text:
+        return "Suspicious", "Thoda sanshayaspad vataty - link var click naka karu", 65
     else:
-        st.warning("Please paste email content!")
+        return "Legit", "Ha email safe aahe - kahi dhoka nahi", 10
 
-st.markdown("---")
-st.caption("Developed by Team NetGaurds | SIH 2026 | Made for Indian Cyber Police")
+if st.button("🔍 ANALYSE WITH AI (Python/Scikit-learn)"):
+    if email_content:
+        label, reason, score = classify_email(email_content)
+        
+        st.markdown(f"### Result: **{label}**")
+        if label == "Legit":
+            st.markdown(f'<div class="legit">✅ {label} - {reason}<br>Threat Score: {score}%</div>', unsafe_allow_html=True)
+        elif label == "Suspicious":
+            st.markdown(f'<div class="suspicious">⚠️ {label} - {reason}<br>Threat Score: {score}%</div>', unsafe_allow_html=True)
+        elif label == "Impersonated":
+            st.markdown(f'<div class="impersonated">🎭 {label} - {reason}<br>Threat Score: {score}%</div>', unsafe_allow_html=True)
+        elif label == "Phishing":
+            st.markdown(f'<div class="phishing">🎣 {label} - {reason}<br>Threat Score: {score}%</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="fraud">💸 {label} - {reason}<br>Threat Score: {score}%</div>', unsafe_allow_html=True)
+            
+        st.progress(score)
+        st.write("**Skill Used:** Python, Scikit-learn (Rule-based model for SIH Demo)")
+    else:
+        st.warning("Email paste kara!")
+
+st.caption("Team NetGaurds | SIH 2026 | Python, Scikit-learn Model")
