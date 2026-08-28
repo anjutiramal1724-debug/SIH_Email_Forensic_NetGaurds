@@ -68,6 +68,7 @@ if st.button("ANALYSE WITH AI", type="primary"):
         })
         if label!= "Legit":
             st.session_state.threats += 1
+            st.rerun()
 
         st.subheader(f"Result: {label}")
         css_class = label.lower()
