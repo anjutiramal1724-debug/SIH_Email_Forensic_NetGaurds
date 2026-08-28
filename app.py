@@ -22,7 +22,7 @@ st.markdown("""
 # SIDEBAR - Team Name and Skills Rahu Dila
 with st.sidebar:
     st.title("Team NetGaurds")
-     st.image("logo.png", width=200)
+    st.image("logo.png", width=200)
     st.markdown("**Member 1:** Anjali")
     st.markdown("**Role:** AI Threat Engine")
     st.markdown("**Skills:** Python, Scikit-learn")
